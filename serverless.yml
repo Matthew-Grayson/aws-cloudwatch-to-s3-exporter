@@ -1,0 +1,65 @@
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs18.x
+  timeout: 30
+  stage: ${opt:stage, 'dev'}
+    environment: ${file(env.yml):${self:provider.stage}, ''}
+  vpc: ${file(env.yml):${self:provider.stage}-vpc, ''}
+  apiGateway:
+    binaryMediaTypes:
+      - 'image/*'
+      - 'font/*'
+  logs:
+    restApi: true
+  deploymentBucket:
+    serverSideEncryption: AES256
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - lambda:InvokeAsync
+            - lambda:InvokeFunction
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - iam:PassRole
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+            - s3:GetObjectAcl
+            - s3:PutObject
+            - s3:PutObjectAcl
+            - s3:PutBucketAcl
+            - s3:GetBucketAcl
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - sts:AssumeRole
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - logs:CreateExportTask
+            - logs:CreateLogStream
+            - logs:Describe*
+            - logs:Get*
+            - logs:List*
+            - logs:PutLogEvents
+            - logs:StartQuery
+            - logs:StopQuery
+            - logs:TestMetricFilter
+            - logs:FilterLogEvents
+            - logs:StartLiveTail
+            - logs:StopLiveTail
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - ssm:DescribeParameters
+            - ssm:GetParameter
+            - ssm:GetParameters
+            - ssm:GetParametersByPath
+            - ssm:PutParameter
+          Resource: '*'
+  
