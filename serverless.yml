@@ -62,4 +62,11 @@ provider:
             - ssm:GetParametersByPath
             - ssm:PutParameter
           Resource: '*'
+
+functions:
+  - ${file(functions.yml)}
+
+plugins:
+  - serverless-domain-manager
+  - serverless-webpack
   
