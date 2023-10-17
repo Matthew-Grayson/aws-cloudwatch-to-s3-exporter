@@ -1,0 +1,7 @@
+cloudwatchToS3:
+  handler: cloudwatchToS3.handler
+  timeout: 900
+  events:
+    - schedule: rate(4 hours)
+  reservedConcurrency: 1
+  memorySize: 1024
